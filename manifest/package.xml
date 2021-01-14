@@ -29,6 +29,10 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>*</​members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>*</members>
         <name>StaticResource</name>
     </types>
