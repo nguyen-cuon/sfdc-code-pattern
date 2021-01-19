@@ -13,19 +13,19 @@ trigger AccountTrigger on Account (after insert, after update, after delete) {
     
     if(isActivedTrigger && !isStarted) {
         if(trigger.isInsert) {
-            AccountHandler.insertAccount(ids);
+            AccountHandler.insertExternalAccount(trigger.newMap.keySet());
         } else if(trigger.isUpdate) {
             for(Account acc: trigger.new) {
                 if((trigger.oldMap.get(acc.Id).Name != acc.Name)
                     || (trigger.oldMap.get(acc.Id).Type != acc.Type)) {
                     ids.add(acc.Id);
                 }
-                if(ids.size() > 0) {
-                    AccountHandler.updateAccount(ids);
-                }
+            }
+            if(ids.size() > 0) {
+                AccountHandler.updateExternalAccount(ids);
             }
         } else if(trigger.isDelete) {
-            AccountHandler.deleteAccount(ids);
+            AccountHandler.deleteExternalAccount(trigger.newMap.keySet());
         }    
     }
 }
