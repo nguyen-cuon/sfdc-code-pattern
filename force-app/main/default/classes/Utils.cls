@@ -22,6 +22,8 @@ public class Utils {
     public static final String IS_AFTER_UPDATE = 'UPDATE';
     public static final String IS_AFTER_DELETE = 'DELETE';
 
+    public final static Integer BATCH_RECORDS_SCOPE = 200;
+
     public static Boolean isActivedTrigger(String triggerName){
         List<TriggerInfoSetting__mdt> ts = [SELECT Active__c, DeveloperName, MasterLabel 
             FROM TriggerInfoSetting__mdt WHERE DeveloperName LIKE :triggerName LIMIT 1];

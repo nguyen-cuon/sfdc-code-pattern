@@ -1,8 +1,8 @@
-global class OpportunityBatch implements Database.Batchable<sObject>, Database.AllowsCallouts{
+global class UserBatch implements Database.Batchable<sObject>, Database.AllowsCallouts{
     private String query;
     private String type;
 
-    global OpportunityBatch(String soql, String triggerType) {
+    global UserBatch(String soql, String triggerType) {
         query = soql;
         type = triggerType;
     }
@@ -13,18 +13,18 @@ global class OpportunityBatch implements Database.Batchable<sObject>, Database.A
 
     global void execute(Database.BatchableContext bc, List<sObject> scop) {
         if(scop.size() > 0) {
-            List<Opportunity> opps = (List<Opportunity>)scop;
+            List<User> accs = (List<User>)scop;
             Set<Id> ids = new Set<id>();
-            for(Opportunity opp: opps) {
-                ids.add(opp.Id);
+            for(User acc: accs) {
+                ids.add(acc.Id);
             }
             if(ids.size() > 0) {
                 if(type == Utils.IS_AFTER_INSERT) {
-                    OpportunityHandler.doCalloutToInsertOpportunity(ids);
+                   UserHandler.doCalloutToInsertUser(ids);
                 } else if(type == Utils.IS_AFTER_UPDATE) {
-                    OpportunityHandler.doCalloutToUpdateOpportunity(ids);
+                   UserHandler.doCalloutToUpdateUser(ids);
                 } else if(type == Utils.IS_AFTER_DELETE) {
-                    OpportunityHandler.doCalloutToDeleteOpportunity(ids);
+                   UserHandler.doCalloutToDeleteUser(ids);
                 }
             }
         }
