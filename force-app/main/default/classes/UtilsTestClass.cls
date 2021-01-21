@@ -1,0 +1,4 @@
+@isTest
+private class UtilsTestClass {
+    
+}

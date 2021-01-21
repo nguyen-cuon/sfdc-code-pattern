@@ -1,6 +1,14 @@
+/*
+ * 株式会社CUON（クオン）
+ * 作成日：2021/1/20
+ * 作成者：Nguyen Minh Phuong
+ * 所属　：ビジネスコンサルティング事業部兼プロジェクト開発部
+ * 役職　：アカウントエンジニア
+ */
 trigger OpportunityTrigger on Opportunity (after insert, after update, after delete) {
     Set<Id> ids = new Set<Id>();
     Boolean isActivedTrigger = Utils.isActivedTrigger(Utils.OPPORTUNITY_TRIGGER);
+    // Boolean isActivedTrigger = false;
     Boolean isStarted = OpportunityHandler.isStarted;
     
     if(isActivedTrigger && !isStarted) {
@@ -17,7 +25,7 @@ trigger OpportunityTrigger on Opportunity (after insert, after update, after del
                 OpportunityHandler.updateExternalOpportunity(ids);
             }
         } else if(trigger.isDelete) {
-            OpportunityHandler.deleteExternalOpportunity(trigger.newMap.keySet());
+            OpportunityHandler.deleteExternalOpportunity(trigger.oldMap.keySet());
         }    
     }
 }

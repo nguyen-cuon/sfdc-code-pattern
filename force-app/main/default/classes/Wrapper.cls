@@ -10,6 +10,8 @@ public class Wrapper {
         public Id opp_id               {get;set;}
         public String opp_name         {get;set;}
         public String opp_type         {get;set;}
+        public String opp_stageName    {get;set;}
+        public Date opp_closeDate      {get;set;}
     }
 
     public class User {

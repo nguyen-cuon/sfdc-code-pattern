@@ -46,6 +46,7 @@ public with sharing class AccountHandler {
     }
 
     private static List<Wrapper.Account> getMappingDataSyn(Set<Id> ids, Boolean isDelete) {
+        isStarted = true;
         List<Wrapper.Account> was = new List<Wrapper.Account>();
         for(Account acc: [SELECT Id, Name, Type, Phone FROM Account WHERE Id=:ids]) {
             Wrapper.Account wa = new Wrapper.Account();

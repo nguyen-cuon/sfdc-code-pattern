@@ -24,6 +24,8 @@ public class Utils {
 
     public final static Integer BATCH_RECORDS_SCOPE = 200;
 
+    public final static String NAMED_CREDENTIALS_NAME = 'ApiGatewayAwsConnectionInfo';
+
     public static Boolean isActivedTrigger(String triggerName){
         List<TriggerInfoSetting__mdt> ts = [SELECT Active__c, DeveloperName, MasterLabel 
             FROM TriggerInfoSetting__mdt WHERE DeveloperName LIKE :triggerName LIMIT 1];
@@ -37,6 +39,11 @@ public class Utils {
         return connInfo;
     }
 
+    public static String getNamedCredentialsURL(String DeveloperName) {
+        List<NamedCredential> ncs = [SELECT DeveloperName, Endpoint FROM NamedCredential WHERE DeveloperName LIKE :DeveloperName LIMIT 1];
+        return (ncs.size() > 0) ? ncs[0]?.Endpoint : '';
+    }
+
     public static void postMessageToSlack(String message, String webhookURL) {
         Map<String,Object> msg = new Map<String,Object>();
         msg.put('text', message);
@@ -48,14 +55,16 @@ public class Utils {
         req.setMethod('POST');
         req.setBody(body);
         Http http = new Http();
-        HttpResponse res = http.send(req);
+        if(!Test.isRunningTest()) {
+            HttpResponse res = http.send(req);
+        }
     }
 
     public static HttpRequest getHttpRequest(String endpoint) {
         HttpRequest request = new HttpRequest();
         request.setHeader('Content-Type', 'application/json');
         request.setHeader('X-API-KEY', getConnectionInfoMetadata()?.Aws_API_Gateway_key__c);
-        request.setEndpoint('callout:ApiGatewayAwsConnectionInfo/' + endpoint);
+        request.setEndpoint('callout:' + NAMED_CREDENTIALS_NAME + '/' + endpoint);
         return request;
     }
 
@@ -85,11 +94,11 @@ public class Utils {
         cres.httpResponse = response;
         cres.isSynced = isSynced;
         cres.ids = ids;
-        if(sObjType == USER_SOBJ) {
+        if(sObjType == ACCOUNT_SOBJ) {
             cres.sObjs = updateSyncStatusAccount(ids, String.join(msgs, '====='), isSynced, eventType);
-        } else if(sObjType == ACCOUNT_SOBJ) {
+        } else if(sObjType == OPPORTUNITY_SOBJ) {
             cres.sObjs = updateSyncStatusOpportunity(ids, String.join(msgs, '====='), isSynced, eventType);
-        } else if(sObjType == OPPORTUNITY_SOBJ){
+        } else if(sObjType == USER_SOBJ){
             cres.sObjs = updateSyncStatusUser(ids, String.join(msgs, '====='), isSynced, eventType);
         }        
         return cres;
@@ -141,5 +150,21 @@ public class Utils {
             update us;   
         // }
         return us;
+    }
+
+    public static void abortAllJobs() {
+        List<CronTrigger> listCronTrigger = [SELECT Id, CronExpression, EndTime, NextFireTime, OwnerId,
+                                            PreviousFireTime, StartTime, State, TimesTriggered, TimeZoneSidKey 
+                                            FROM CronTrigger 
+                                            WHERE State = 'Waiting' or State='Running'];
+        System.debug('No of jobs: '+listCronTrigger.size());
+        If (listCronTrigger.size() > 0)
+        {
+            for (Integer i = 0; i < listCronTrigger.size(); i++)
+            { 
+                System.abortJob(listCronTrigger[i].Id);
+                System.debug('Job details ::'+String.valueOf(listCronTrigger[i]));
+            }
+        }
     }
 }

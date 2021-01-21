@@ -25,7 +25,7 @@ trigger AccountTrigger on Account (after insert, after update, after delete) {
                 AccountHandler.updateExternalAccount(ids);
             }
         } else if(trigger.isDelete) {
-            AccountHandler.deleteExternalAccount(trigger.newMap.keySet());
+            AccountHandler.deleteExternalAccount(trigger.oldMap.keySet());
         }    
     }
 }

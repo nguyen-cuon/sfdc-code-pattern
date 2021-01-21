@@ -1,4 +1,3 @@
-
 /*
  * 株式会社CUON（クオン）
  * 作成日：2021/1/18
@@ -47,13 +46,16 @@ public with sharing class OpportunityHandler {
     }
 
     private static List<Wrapper.Opportunity> getMappingDataSyn(Set<Id> ids, Boolean isDelete) {
+        isStarted = true;
         List<Wrapper.Opportunity> wos = new List<Wrapper.Opportunity>();
-        for(Opportunity opp: [SELECT Id, Name, Type FROM Opportunity WHERE Id=:ids]) {
+        for(Opportunity opp: [SELECT Id, Name, Type, StageName, CloseDate FROM Opportunity WHERE Id=:ids]) {
             Wrapper.Opportunity wo = new Wrapper.Opportunity();
             wo.opp_id = opp.Id;
             if(!isDelete) {
                 wo.opp_name = opp.Name;
                 wo.opp_type = opp.Type;
+                wo.opp_stageName = opp.StageName;
+                wo.opp_closeDate = opp.CloseDate;
             }
             wos.add(wo);
         }
