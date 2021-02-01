@@ -1,13 +1,14 @@
 trigger UserTrigger on User (after insert, after update) {
-    Set<Id> ids = new Set<Id>();
-    Set<Id> delIds = new Set<Id>();
     Boolean isActivedTrigger = Utils.isActivedTrigger(Utils.USER_TRIGGER);
     Boolean isStarted = UserHandler.isStarted;
+    Boolean isAllowTrigger = OpportunityTestClass.shouldRunTrigger();
     
-    if(isActivedTrigger && !isStarted) {
+    if(isActivedTrigger && !isStarted && isAllowTrigger) {
         if(trigger.isInsert) {
-            UserHandler.insertExternalUser(ids);
+            UserHandler.insertExternalUser(trigger.newMap.keySet());
         } else if(trigger.isUpdate) {
+            Set<Id> ids = new Set<Id>();
+            Set<Id> delIds = new Set<Id>();
             for(User acc: trigger.new) {
                 if((trigger.oldMap.get(acc.Id).Username != acc.Username)
                     || (trigger.oldMap.get(acc.Id).LastName != acc.LastName)

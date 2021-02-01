@@ -1,10 +1,9 @@
-/*
- * 株式会社CUON（クオン）
- * 作成日：2021/1/18
+/* 株式会社CUON（クオン）
+ * 作成日：1/2021
  * 作成者：Nguyen Minh Phuong
  * 所属　：ビジネスコンサルティング事業部兼プロジェクト開発部
- * 役職　：アカウントエンジニア
- */
+ * 役職　：アカウントエンジニア  */
+
 public with sharing class OpportunityHandler {
     //トリガ回帰を回避させるため
     public static Boolean isStarted = false;
@@ -35,14 +34,14 @@ public with sharing class OpportunityHandler {
         HttpRequest request = Utils.getHttpRequest(Utils.OPPORTUNITY_ENDPOINT);
         request.setMethod('PATCH');
         request.setBody(JSON.serialize(getMappingDataSyn(ids, false)));
-        Wrapper.CustomHttpResponse wc = Utils.sendRequestToExternal(request, ids, Utils.IS_AFTER_UPDATE, Utils.OPPORTUNITY_SOBJ);
-    }
+        Wrapper.CustomHttpResponse wc = Utils.sendRequestToExternal(request, ids, Utils.IS_AFTER_INSERT, Utils.OPPORTUNITY_SOBJ); 
+     }
 
     public static void doCalloutToDeleteOpportunity(Set<Id> ids) {
         HttpRequest request = Utils.getHttpRequest(Utils.OPPORTUNITY_ENDPOINT);
         request.setMethod('DELETE');
         request.setBody(JSON.serialize(getMappingDataSyn(ids, true)));
-        Wrapper.CustomHttpResponse wc = Utils.sendRequestToExternal(request, ids, Utils.IS_AFTER_DELETE, Utils.OPPORTUNITY_SOBJ);
+        Wrapper.CustomHttpResponse wc = Utils.sendRequestToExternal(request, ids, Utils.IS_AFTER_INSERT, Utils.OPPORTUNITY_SOBJ);
     }
 
     private static List<Wrapper.Opportunity> getMappingDataSyn(Set<Id> ids, Boolean isDelete) {

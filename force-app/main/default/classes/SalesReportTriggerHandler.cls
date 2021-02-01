@@ -3,7 +3,6 @@
  *
  * Copyright (c) 2020 nguyen@cuon.co.jp
  */
-
 public with sharing class SalesReportTriggerHandler {
     public static void OnAfterInsert(List<SalesReport__c> newSalesReport) {
         // EXECUTE AFTER INSERT LOGIC

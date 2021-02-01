@@ -1,6 +1,6 @@
 /*
  * 株式会社CUON（クオン）
- * 作成日：2021/1/13
+ * 作成日：1/2021
  * 作成者：Nguyen Minh Phuong
  * 所属　：ビジネスコンサルティング事業部兼プロジェクト開発部
  * 役職　：アカウントエンジニア
@@ -70,8 +70,12 @@ public class Utils {
 
     public static Wrapper.CustomHttpResponse sendRequestToExternal(HttpRequest request, Set<Id> ids, String eventType, String sObjType) {
         Http http = new Http();
-        HttpResponse response = http.send(request);
-        
+        HttpResponse response;
+        if(!Test.isRunningTest()) {
+            response = http.send(request);
+        } else {
+            response = new HttpResponse();
+        }
         system.debug('myresponse.getBody():'+response.getBody());
         String[] msgs = new List<String>();
         Boolean isSynced = false;

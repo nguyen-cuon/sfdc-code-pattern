@@ -1,4 +1,10 @@
-global with sharing class OpportunityScheduler implements Schedulable{
+/* 株式会社CUON（クオン）
+ * 作成日：1/2021
+ * 作成者：Nguyen Minh Phuong
+ * 所属　：ビジネスコンサルティング事業部兼プロジェクト開発部
+ * 役職　：アカウントエンジニア  */
+
+global class OpportunityScheduler implements Schedulable{
 
     global void execute(SchedulableContext context) {
         runBatch(Utils.IS_AFTER_INSERT);
@@ -9,7 +15,7 @@ global with sharing class OpportunityScheduler implements Schedulable{
     private String getQueryBuilderString(String type) {
         String query = 'SELECT Id, IsSynchronized__c, TriggerType__c ' +
         + 'FROM Opportunity ' +
-        + 'WHERE IsSynchronized__c = FALSE AND TriggerType__c = \'' + type + '\'';
+        + 'WHERE IsSynchronized__c = FALSE AND TriggerType__c = \'' + type + '\' ALL ROWS';
         system.debug('myquery:' + query);
         return query;
     }

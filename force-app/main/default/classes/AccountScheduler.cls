@@ -1,4 +1,4 @@
-global with sharing class AccountScheduler implements Schedulable{
+global class AccountScheduler implements Schedulable{
 
     global void execute(SchedulableContext context) {
         runBatch(Utils.IS_AFTER_INSERT);
@@ -9,7 +9,7 @@ global with sharing class AccountScheduler implements Schedulable{
     private String getQueryBuilderString(String type) {
         String query = 'SELECT Id, IsSynchronized__c, TriggerType__c ' +
         + 'FROM Account ' +
-        + 'WHERE IsSynchronized__c = FALSE AND TriggerType__c = \'' + type + '\'';
+        + 'WHERE IsSynchronized__c = FALSE AND TriggerType__c = \'' + type + '\' ALL ROWS';
         system.debug('myquery:' + query);
         return query;
     }
@@ -20,3 +20,10 @@ global with sharing class AccountScheduler implements Schedulable{
         database.executebatch(b, Utils.BATCH_RECORDS_SCOPE);
     }
 }
+
+// global class AccountScheduler implements Schedulable{
+//     global void execute(SchedulableContext context) {
+//         AccountBatch b = new AccountBatch();
+//         Database.executebatch(b, Utils.BATCH_RECORDS_SCOPE);
+//     }
+// }
